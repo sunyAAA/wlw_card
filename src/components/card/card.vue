@@ -1,0 +1,31 @@
+<template>
+    <div class="card">
+        <span>{{val}}</span>
+        <p>{{name}}</p>
+    </div>
+</template>
+
+<script>
+export default {
+    props:{
+        name:{
+            type:String,
+            default:'名称'
+        },
+        val:{
+            type:String,
+            default:'值'
+        }
+    }
+}
+</script>
+
+<style lang="stylus" scoped>
+.card
+    height 25px
+    line-height 25px
+    padding 10px 20px
+    border-bottom  1px solid #ccc
+    span
+        float right 
+</style>
