@@ -1,8 +1,8 @@
 
 <template>
   <div id="app">
-    <!-- <login-page></login-page> -->
-    <view-box></view-box>
+    <login-page v-if='!isLogin'></login-page>
+    <view-box v-else></view-box>
   </div>
 </template>
 
@@ -13,7 +13,7 @@ export default {
   name: 'app',
   data () {
     return {
-
+      isLogin:false
     }
   },
   components:{loginPage,viewBox}

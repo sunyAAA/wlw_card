@@ -15,7 +15,7 @@
                         </el-tabs>
                         <div class="card-box">
                             <card name="卡号" val="1064877196052"></card>
-                            <card name="卡号" val="1064877196052"></card>
+                            <card name="ICCID" val="1064877196052"></card>
                             <card name="卡号" val="1064877196052"></card>
                         </div>
                     </div>
@@ -82,7 +82,7 @@ export default {
     },
     methods:{
         pickChange(val){
-            
+
         }
     }
 }

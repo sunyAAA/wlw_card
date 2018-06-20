@@ -8,8 +8,7 @@
                 <el-input type="password" v-model="form.pass"></el-input>
             </el-form-item>
               <el-form-item>
-    <el-button type="primary" @click="onSubmit">登录</el-button>
-    <el-button>取消</el-button>
+          <el-button type="success" @click="onSubmit">登录</el-button>
   </el-form-item>
         </el-form>
     </div>    
@@ -37,9 +36,11 @@ export default {
     right: 150px;
     top: 40%;
     width: 500px;
-    background: #ffffff;
-    padding-top: 60px;
+    background: #eee;
+    padding-top: 40px;
     padding-right: 60px;
     border-radius: 10px;
 }
+.el-button
+  width 100%
 </style>

@@ -1,6 +1,20 @@
 <template>
     <div class="login-page" :style="bg">
-        <login-box></login-box>
+        <transition name='fadeRight'>
+            <login-box v-show='loaded'></login-box>
+        </transition>
+        <transition name='fadeLeft'>
+        <div class="login-msg" v-show='loaded'>
+            <p>物联网</p>
+            <ul>
+                <li>Lorem ipsum dolor sit amet consectetur, adipisi vero possimus aut reprehenderit? <br>Ratione qui, fugit obcaecat</li>
+                <li>Lorem ipsum dolor sit amet consectetur adipisicin earum quas tempora delectus eos<br> libero consequatur sequi il</li>
+                <li>Lorem ipsum dolor sit amet consectetur adipisicin earum quas tempora delectus eos <br>libero consequatur sequi il</li>
+                <li>Lorem ipsum dolor sit amet consectetur adipisicingearum quas tempora delectus eos <br>libero consequatur sequi il</li>
+                <li>Lorem ipsum dolor sit amet consectetur adipisicingearum quas tempora delectus eos <br>libero consequatur sequi il</li>
+            </ul>
+        </div>
+        </transition>
     </div>
 </template>
 
@@ -17,17 +31,27 @@ export default {
                 bottom:0,
                 background:"url("+require('../../assets/img/bg/bg3.jpg')+") no-repeat",
                 backgroundSize:'100% 100%'
-            }
+            },
+            loaded:false
         }
     },
     components:{
         loginBox
+    },
+    mounted(){
+        this.loaded = true;
     }
 }
 </script>
 
 <style lang="stylus" scoped>
-    
+    .login-msg
+        position fixed
+        left 200px
+        top 35%
+        color #fff
+        p
+            font-size 40px
 </style>
 
 
