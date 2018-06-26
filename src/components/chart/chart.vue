@@ -4,20 +4,20 @@
   :height="400"></line-chart>
     <el-row>
       <el-col :span='6'>
-        <p>12.9 <span class="unit">M</span> </p>
-        <p>本月用量</p>
+        <p class="count">12.9 <span class="unit">M</span> </p>
+        <p class="name">本月用量</p>
       </el-col>
       <el-col :span='6'>
-        <p>12.9 <span class="unit">M</span> </p>
-        <p>本月用量</p>
+        <p class="count">12.9 <span class="unit">M</span> </p>
+        <p class="name">昨日用量</p>
       </el-col>
       <el-col :span='6'>
-        <p>12.9 <span class="unit">M</span> </p>
-        <p>本月用量</p>
+        <p class="count">12.9 <span class="unit">M</span> </p>
+        <p class="name">资费</p>
       </el-col>
       <el-col :span='6'>
-        <p>12.9 <span class="unit">M</span> </p>
-        <p>本月用量</p>
+        <p class="count">25<span class="unit"></span> </p>
+        <p class="name">卡数</p>
       </el-col>
     </el-row>
     </div>
@@ -62,5 +62,21 @@ export default {
       .el-col
         height 50px
         text-align center
+.el-col
+  p.count
+    font-size 24px
+    margin-bottom 5px
+  .name
+    font-size 14px
+  .unit
+    font-size 14px
+  &:nth-child(1) .name
+    color red
+  &:nth-child(2) .name
+    color #26c6da
+  &:nth-child(3) .name
+    color #ffa726
+  &:nth-child(4) .name
+    color #999
 </style>
 

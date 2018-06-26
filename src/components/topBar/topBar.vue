@@ -9,11 +9,7 @@
 </template>
 <script>
 export default {
-    methods:{
-        colspan(){
-            this.$emit('colspan')
-        }
-    }
+
 }
 </script>
 

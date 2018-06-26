@@ -55,6 +55,7 @@ import Chart from '../../components/chart/chart'
 import DatePicker from '../../components/datePicker/datePicker'
 import TableView from '../../components/tableView/tableView'
 import SearchBox from '../../components/searchBox/searchBox'
+import {getTotalPage} from '../../api/apiData.js'
 export default {
     components:{IconBanner,Chart,DatePicker,TableView,SearchBox},
     data(){
@@ -65,7 +66,11 @@ export default {
             ]
         }
     },
+    created(){
+        getTotalPage()
+    },
     methods:{
+
         pickChange(arr){
             console.log(arr)
         },

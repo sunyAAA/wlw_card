@@ -1,7 +1,7 @@
 <template>
     <div class="login-page" :style="bg">
         <transition name='fadeRight'>
-            <login-box v-show='loaded'></login-box>
+            <login-box v-show='loaded' @login='send'></login-box>
         </transition>
         <transition name='fadeLeft'>
         <div class="login-msg" v-show='loaded'>
@@ -37,6 +37,11 @@ export default {
     },
     components:{
         loginBox
+    },
+    methods:{
+        send(statu){
+            this.$emit('login',statu)
+        }
     },
     mounted(){
         this.loaded = true;

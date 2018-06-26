@@ -25,7 +25,7 @@ export default {
     height 25px
     line-height 25px
     padding 10px 20px
-    border-bottom  1px solid #ccc
+    border-bottom  1px solid #eee
     span
         float right 
 </style>

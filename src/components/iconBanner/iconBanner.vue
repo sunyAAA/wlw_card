@@ -76,6 +76,7 @@ export default {
     margin 0 auto
     box-sizing border-box
     background #fff
+    border-radius 4px
     .icon-box
         position absolute
         width 80px
