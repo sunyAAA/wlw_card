@@ -8,15 +8,15 @@
                     icon="menu"
                 >
                     <div slot="tab">
-                        <el-tabs  style="height: 40px;float:right">
-                            <el-tab-pane label="移动"></el-tab-pane>
-                            <el-tab-pane label="联通"></el-tab-pane>
-                            <el-tab-pane label="电信"></el-tab-pane>
-                        </el-tabs>
+                        <el-tabs v-model="activeName" aria-readonly style="height: 40px;float:right">
+                            <el-tab-pane name='cm' label="移动"></el-tab-pane>
+                            <el-tab-pane name='ct' label="联通"></el-tab-pane>
+                            <el-tab-pane name='cu' label="电信"></el-tab-pane>
+                        </el-tabs>  
                         <div class="card-box">
-                            <card name="卡号" val="1064877196052"></card>
-                            <card name="ICCID" val="1064877196052"></card>
-                            <card name="卡号" val="1064877196052"></card>
+                            <card name="卡号" :val="deviceMsg.cardNumber || ''"></card>
+                            <card name="ICCID" :val="deviceMsg.cmIccid || ''"></card>
+                            <card name="IMSI" :val="deviceMsg.isSms || ''"></card>
                         </div>
                     </div>
                 </panel>
@@ -29,9 +29,9 @@
                 >
                     <div slot="tab">
                         <div class="card-box">
-                            <card name="在线信息" val="离线"></card>
-                            <card name="卡号" val="1064877196052"></card>
-                            <card name="卡号" val="1064877196052"></card>
+                            <card name="在线信息" :val="deviceMsg.onlineStatus?'在线':'离线'"></card>
+                            <card name="IP" :val="deviceMsg.ip"></card>
+                            <card name="RAT" :val="deviceMsg.rat"></card>
                         </div>
                     </div>
                 </panel>
@@ -44,9 +44,9 @@
                 >
                     <div slot="tab">
                         <div class="card-box">
-                            <card name="卡号" val="1064877196052"></card>
-                            <card name="卡号" val="1064877196052"></card>
-                            <card name="卡号" val="1064877196052"></card>
+                            <card name="流量限额" :val="deviceMsg.userLimit"></card>
+                            <card name="达量断网" val=""></card>
+                            <card name="月租" :val="deviceMsg.sysUserLimit"></card>
                         </div>
                     </div>
                 </panel>
@@ -63,7 +63,7 @@
             ></date-picker>
         </div>
         <p>  总流量 （MB）</p>
-        <chart></chart>
+        <chart :data='chartData' :bottomList='bottomList'></chart>
     </div>
     </div>
 </template>
@@ -73,16 +73,67 @@ import Panel from '../../components/panel/panel'
 import Card from '../../components/card/card'
 import chart from '../../components/chart/chart'
 import DatePicker from '../../components/datePicker/datePicker'
+import {query,format} from '../../api/dataUtil.js'
+import {getDeviceDetailById,getDevicePool} from '../../api/apiData.js'
 export default {
     components:{Panel,Card,chart,DatePicker},
     data(){
         return{
-            activeName:'first'
+            activeName:'cm',
+            deviceId :'',
+            deviceMsg:{},
+            bottomList:[],
+            chartData:{
+                labels:[],
+                datasets:[
+                    {
+                        label:'单卡流量',
+                        backgroundColor: '#e4393c',
+                        data:[]
+                    }
+                ]
+            }
         }
+    },
+    created(){
+        this.deviceId = this.$route.query['id'];
+        getDeviceDetailById(this.deviceId).then(res=>{
+           var type  =  res.body.data.netWork;
+           var arr =['','cm','ct','cu']
+           this.activeName = arr[type]
+           this.deviceMsg = res.body.data;
+        }) 
+        getDevicePool(this.deviceId,
+            format(new Date('2017/5/3').getTime(),'Y-m-d H:i:s'),
+            format(new Date().getTime(),'Y-m-d H:i:s')
+        ).then(res=>{
+            var d = res.body.data;
+            if(d){
+                this.bottomList.push({name:'本月用量',value:d[0].usageMonth})
+                this.bottomList.push({name:'昨日用量',value:d[0].usageYesterday})
+                this.bottomList.push({name:'剩余流量',value:d[0].userLimit - d[0].usageMonth})
+
+                for(var item of d){
+                    this.chartData.labels.push(format(item.insertTime,'m-d'));
+                    this.chartData.datasets[0].data.push(item.usageYesterday)
+                }
+            }
+
+    //               datacollection: {
+    //     labels: ["06-18",'06-19','06-20','06-20','06-20','06-20','06-20','06-20','06-20',"06-18",'06-20','06-20','06-20','06-20','06-20','06-20','06-20','06-20',"06-18",'06-20','06-20','06-20','06-20','06-20','06-20','06-20','06-20'],
+    //     datasets: [
+    //       {
+    //         label: "用量(M)",
+    //         backgroundColor: this.color,
+    //         data: [40, 20,25,28,17,19,60,80,10,40, 20,25,28,17, 20,25,28,17,19,60,80,10,19,60,80,10,40,]
+    //       }
+    //     ]
+    //   },
+        })
     },
     methods:{
         pickChange(val){
-
+            console.log(val)
         }
     }
 }

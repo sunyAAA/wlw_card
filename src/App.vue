@@ -10,26 +10,28 @@
 import loginPage from './pages/loginPage/loginPage'
 import viewBox from './pages/viewBox/viewBox'
 import storage from 'good-storage'
+import config from './config'
 
 export default {
   name: 'app',
-  data () {
-    return{
-      isLogin:false
-    }
-  },
-  computed:{
 
+  data(){
+    return {
+      isLogin:config.login
+    }
   },
   methods:{
     check(statu){
-      this.isLogin = statu
+      config.login = statu
+      this.isLogin = config.login
+      console.log(config)
     }
   },
   created(){
-    let statu = storage.get('u');
+    this.isLogin = config.login
+    let statu = storage.get('_token');
     if(statu){
-      this.isLogin = true
+      this.isLogin = config.login = true
     }
   },
   components:{loginPage,viewBox}

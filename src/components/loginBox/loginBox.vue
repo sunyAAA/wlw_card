@@ -29,6 +29,7 @@ export default {
     submit() {
       this.$http.post('api/v1/login',this.form,{emulateJSON:true}).then(res=>{
         if(res.body.code == 1){
+          console.log('---')
             storage.set('u',res.body.data)
             storage.set('_token',res.body.data.token)
             this.$emit('login',true)

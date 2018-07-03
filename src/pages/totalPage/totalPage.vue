@@ -43,7 +43,9 @@
         </div> -->
         <search-box @search='search'></search-box>
         <p>设备列表</p>
-        <table-view></table-view>
+        <table-view :data='deviceList' :filter='filter'
+            :total='deviceListTotal' :loading="deviceListLoading"
+        ></table-view>
     </div>
  </div>
 
@@ -55,19 +57,30 @@ import Chart from '../../components/chart/chart'
 import DatePicker from '../../components/datePicker/datePicker'
 import TableView from '../../components/tableView/tableView'
 import SearchBox from '../../components/searchBox/searchBox'
-import {getTotalPage} from '../../api/apiData.js'
+import {getTotalPage,getPoolList} from '../../api/apiData.js'
+import {formData} from '../../api/dataUtil.js'
 export default {
     components:{IconBanner,Chart,DatePicker,TableView,SearchBox},
     data(){
         return{
-            bannerData:[
-                {name:'正常设备',count:'1000',unit:'台'},
-                {name:'异常设备',count:'10',unit:'台'},
-            ]
+            bannerData:[    
+            ],
+            deviceList:[],
+            deviceListTotal:0,
+            deviceListLoading:true,
+            filter:null,
         }
     },
     created(){
-        getTotalPage()
+        getTotalPage().then(res=>{
+            
+           this.deviceList = formData(res.body.data);
+           this.deviceListTotal = res.body.totalCount
+           this.deviceListLoading = false
+        })
+        // getPoolList().then(res=>{
+        //     console.log(res.body)
+        // })
     },
     methods:{
 
@@ -76,6 +89,7 @@ export default {
         },
         search(v){
             console.log(v)
+            this.filter = Number(v)
         }
     }
 }

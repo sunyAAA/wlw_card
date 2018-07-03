@@ -1,24 +1,13 @@
 <template>
     <div class="chart">
-        <line-chart :data='datacollection'   :options="{responsive: true, maintainAspectRatio: false}"
+        <line-chart :data='data'
   :height="400"></line-chart>
     <el-row>
-      <el-col :span='6'>
-        <p class="count">12.9 <span class="unit">M</span> </p>
-        <p class="name">本月用量</p>
+      <el-col :span='24/bottomList.length' v-for="(item,index) in bottomList" :key='index'>
+        <p class="count">{{item.value}} <span class="unit">M</span> </p>
+        <p class="name">{{item.name}}</p>
       </el-col>
-      <el-col :span='6'>
-        <p class="count">12.9 <span class="unit">M</span> </p>
-        <p class="name">昨日用量</p>
-      </el-col>
-      <el-col :span='6'>
-        <p class="count">12.9 <span class="unit">M</span> </p>
-        <p class="name">资费</p>
-      </el-col>
-      <el-col :span='6'>
-        <p class="count">25<span class="unit"></span> </p>
-        <p class="name">卡数</p>
-      </el-col>
+
     </el-row>
     </div>
 </template>
@@ -30,7 +19,11 @@ export default {
     color:{
       type:String,
       default:'#f87979'
-    }
+    },
+    bottomList:{
+      type:Array,
+    },
+    data:{}
   },
   components: {
     LineChart
@@ -43,7 +36,7 @@ export default {
           {
             label: "用量(M)",
             backgroundColor: this.color,
-            data: [40, 20,25,28,17,19,60,80,10,40, 20,25,28,17, 20,25,28,17,19,60,80,10,19,60,80,10,40,]
+            data: [0,0,0,0,0,0,0,0,0,0,0,0,1,2,0,1,3,0]
           }
         ]
       },

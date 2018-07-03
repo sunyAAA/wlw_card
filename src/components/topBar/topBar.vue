@@ -1,15 +1,27 @@
 <template>
     <div class="top-bar">
         <div>
-            <i class="el-icon-message"></i>
-            <img src="" alt="">
-            <span>用户名</span>
+            <span>欢迎您，{{nickName}}</span>
+
+            <div class="avatar-box">
+                <img class="avatar" :src="avatar" alt="">
+
+            </div>
         </div>
     </div>
 </template>
 <script>
+import storage from 'good-storage'
 export default {
-
+    data(){
+        return {
+            nickName:'',
+            avatar:'http://i2.w.yun.hjfile.cn/doc/201402/8a6654146af74cfd80f00db0254238ab.jpg'
+        }
+    },
+    mounted(){
+        this.nickName = storage.get('u').name;
+    }
 }
 </script>
 
@@ -27,4 +39,16 @@ export default {
     background #fff
     margin-left 240px
     z-index 10
+.avatar-box
+    display inline-block
+    width 30px
+    height 30px
+    border-radius 50%
+    overflow hidden
+    vertical-align middle
+    margin-left 25px
+    &>img
+        object-fit cover
+        width 100%
+        heig 100%
 </style>

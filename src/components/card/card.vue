@@ -13,8 +13,6 @@ export default {
             default:'名称'
         },
         val:{
-            type:String,
-            default:'值'
         }
     }
 }
