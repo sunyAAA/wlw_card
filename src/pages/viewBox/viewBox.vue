@@ -22,7 +22,7 @@
             </el-menu>
         </div>
         <div class="content">
-            <top-bar></top-bar>
+            <top-bar @out='sendOut'></top-bar>
             <router-view ></router-view>
         </div>
     </div>
@@ -44,8 +44,10 @@ export default {
   },
   methods: {
     select(index) {
-        console.log(index)
       this.$router.push({path :this.routeList[index]});
+    },
+    sendOut(){
+        this.$emit('out')
     }
   },
   created(){

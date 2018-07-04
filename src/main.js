@@ -21,6 +21,11 @@ Vue.http.interceptors.push((request, next) => {
     if(response.body.code == 110){
       config.login = false
       storage.remove('u')
+      Vue.$notify({
+        title: '警告',
+        message: '用户信息校验失败,请重新登录',
+        offset: 200
+      });
     }
   })
 })

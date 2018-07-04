@@ -41,7 +41,16 @@ export default {
               picker.$emit("pick", [start, end]);
             }
           }
-        ]
+        ],
+        disabledDate(select){
+          var now = new Date().getTime();
+          var dayLeft = now - 30*3600*1000*24;
+          if( new Date(select).getTime() < now && dayLeft<new Date(select).getTime()){
+            return false
+          }else{
+            return true
+          }
+        }
       },
       val: "",
       isShow:false

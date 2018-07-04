@@ -4,7 +4,7 @@
   :height="400"></line-chart>
     <el-row>
       <el-col :span='24/bottomList.length' v-for="(item,index) in bottomList" :key='index'>
-        <p class="count">{{item.value}} <span class="unit">M</span> </p>
+        <p class="count">{{item.value}} <span class="unit">{{item.unit}}</span> </p>
         <p class="name">{{item.name}}</p>
       </el-col>
 
@@ -23,7 +23,9 @@ export default {
     bottomList:{
       type:Array,
     },
-    data:{}
+    data:{
+
+    }
   },
   components: {
     LineChart

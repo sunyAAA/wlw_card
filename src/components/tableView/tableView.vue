@@ -1,7 +1,7 @@
 <template>
     <div class="table-view">
     <el-table
-    :data="filterData"
+    :data="data"
     v-loading='loading'
     element-loading-text="拼命加载中"
     element-loading-spinner="el-icon-loading"
@@ -50,14 +50,14 @@
       width="180">
     </el-table-column>
     <el-table-column
-      prop="enable"
+      prop="cardStatus"
       label="状态"
       width="100"
       filter-placement="bottom-end">
       <template slot-scope="scope">
         <el-tag
-          :type="scope.row.enable === 1? 'success' : 'Danger'"
-          close-transition>{{scope.row.enable === 1 ? '正常':'异常'}}</el-tag>
+          :type="scope.row.cardStatus === 0? 'success' : 'Danger'"
+          close-transition>{{formartStatus(scope.row.cardStatus)}}</el-tag>
       </template>
     </el-table-column>
     <el-table-column
@@ -101,24 +101,18 @@ export default {
     },
     loading: {
       type: Boolean
+    },
+    pageSize:{
+      type:Number,
+      default:5
     }
   },
   data() {
     return {
       pageno: 1,
-      pagesize: 5
     };
   },
   computed: {
-    filterData() {
-      if (this.filter) {
-        const result = this.data.filter(item => item.deviceId == this.filter);
-        this.Datatotal = result.length;
-        return result.slice(this.start, this.end);
-      } else {
-        return this.data.slice(this.start, this.end);
-      }
-    },
     start() {
       return this.pageno == 1 ? 0 : this.pagesize * (this.pageno - 1);
     },
@@ -127,6 +121,9 @@ export default {
     },
     DataTotal(){
       return this.total
+    },
+    pageS(){
+      return this.pagesize
     }
   },
   methods: {
@@ -140,10 +137,24 @@ export default {
       return row.tag === value;
     },
     pagenoChange(val){
-      this.pageno = val;
+      this.$emit('pageNoChange',val)
     },
     go(row){
      this.$router.push('/deviceDetail?id='+row.deviceId)
+    },
+    formartStatus(status){
+      switch(status){
+        case 0 :return '正常';break;
+        case 1 :return '单向停机';break;
+        case 2 :return '停机';break;
+        case 3 :return '预销号';break;
+        case 4 :return '销号';break;
+        case 5 :return '过户';break;
+        case 6 :return '休眠';break;
+        case 7 :return '待激活';break;
+        case 99 :return '号码不存在';break;
+        default : return '异常'
+      }
     }
   }
 };

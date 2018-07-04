@@ -5,13 +5,16 @@
 
             <div class="avatar-box">
                 <img class="avatar" :src="avatar" alt="">
-
             </div>
+            <span class="logOut" @click='out'>
+                登出
+            </span>
         </div>
     </div>
 </template>
 <script>
 import storage from 'good-storage'
+import config from '../../config.js'
 export default {
     data(){
         return {
@@ -21,6 +24,14 @@ export default {
     },
     mounted(){
         this.nickName = storage.get('u').name;
+    },
+    methods:{
+        out(){
+            storage.remove('_token');
+            storage.remove('u');
+            config.login = false
+            this.$emit('out');
+        }
     }
 }
 </script>
@@ -51,4 +62,8 @@ export default {
         object-fit cover
         width 100%
         heig 100%
+.logOut
+    padding-left 20px
+    cursor pointer
+
 </style>

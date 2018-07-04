@@ -1,6 +1,9 @@
 
 
 export function formData(arr){
+    if(!arr){
+        return arr
+    }
     for(var i =0;i<arr.length;i++){
         var item = arr[i]
         item.serveTime  = format(item.serveTime,'Y-m-d');
@@ -46,4 +49,41 @@ export function format (timestamp, formats) {
             s: second
         })[matches];
     });
+}
+
+export function formartPoolData(arr){
+    if(!arr.length){
+        return {}
+    }
+    var result ={
+            labels:[],
+            datasets:[
+                {
+                    label:'总用量(M)',
+                    data:[]
+                }
+            ],
+            bottomList:[
+                {
+                    name : '本月用量',
+                    unit:'M',
+                    value:arr[arr.length-1].monthSum  || 0
+                },
+                {
+                    name:'昨日用量',
+                    unit:'M',
+                    value:arr[arr.length -1].yesterdayUse
+                },
+                {
+                    name:'卡数',
+                    unit:'张',
+                    value:arr[0].countNum || 0,
+                }
+            ]
+    }
+    for(var i = 0 ;i<arr.length;i++){
+        result.labels.push(format(arr[i].insertDate,'m-d'));
+        result.datasets[0].data.push(arr[i].yesterdayUse)
+    }
+    return result;
 }

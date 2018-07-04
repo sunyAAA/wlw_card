@@ -1,16 +1,31 @@
 <template>
     <div class="pool-page">
         <p class="title">流量池</p>
-        <pool-box></pool-box>
-        <div class="blank"></div>
-        <pool-box></pool-box>
+        <div v-for='(item,index) in poolList' :key='index'>
+            <pool-box   :pool='item'></pool-box>
+            <div class="blank"></div>
+        </div>
+
     </div>
 </template>
 
 <script>
 import PoolBox from '../../components/poolBox/poolBox'
+import {getMypool} from '../../api/apiData.js'
 export default {
-    components:{PoolBox}
+    data(){
+        return{
+            poolList:[]
+        }
+    },
+    components:{PoolBox},
+    mounted(){
+        getMypool().then(res=>{
+            if(res.body.code == 1){
+                this.poolList = res.body.data;
+            }
+        })
+    }
 }
 </script>
 

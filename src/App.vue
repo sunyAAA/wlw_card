@@ -2,7 +2,7 @@
 <template>
   <div id="app">
     <login-page v-if='!isLogin' @login='check'></login-page>
-    <view-box v-else></view-box>
+    <view-box v-else @out='out'></view-box>
   </div>
 </template>
 
@@ -25,6 +25,9 @@ export default {
       config.login = statu
       this.isLogin = config.login
       console.log(config)
+    },
+    out(){
+      this.isLogin = config.login = false
     }
   },
   created(){
@@ -43,6 +46,7 @@ export default {
   margin: 0;
   padding: 0;
 }
-i {cursor:pointer}
-
+.el-table__row{
+  cursor: pointer;
+}
 </style>

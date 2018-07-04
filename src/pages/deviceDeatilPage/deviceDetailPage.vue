@@ -1,6 +1,6 @@
 <template>
     <div class="device-detail-page">
-        <p class="title">设备详情</p>
+        <p class="title">设备详情 <span class="text">{{name}}</span> </p>
         <el-row class="row">
             <el-col :span="8" class="col">
                 <panel
@@ -14,9 +14,9 @@
                             <el-tab-pane name='cu' label="电信"></el-tab-pane>
                         </el-tabs>  
                         <div class="card-box">
-                            <card name="卡号" :val="deviceMsg.cardNumber || ''"></card>
-                            <card name="ICCID" :val="deviceMsg.cmIccid || ''"></card>
-                            <card name="IMSI" :val="deviceMsg.isSms || ''"></card>
+                            <card name="卡号" :val="cardNumber || ''"></card>
+                            <card name="ICCID" :val="cmIccid || ''"></card>
+                            <card name="IMSI" :val="isSms || ''"></card>
                         </div>
                     </div>
                 </panel>
@@ -74,7 +74,7 @@ import Card from '../../components/card/card'
 import chart from '../../components/chart/chart'
 import DatePicker from '../../components/datePicker/datePicker'
 import {query,format} from '../../api/dataUtil.js'
-import {getDeviceDetailById,getDevicePool} from '../../api/apiData.js'
+import {getDeviceDetailById,getDevicePool,getCompanyById} from '../../api/apiData.js'
 export default {
     components:{Panel,Card,chart,DatePicker},
     data(){
@@ -92,7 +92,8 @@ export default {
                         data:[]
                     }
                 ]
-            }
+            },
+            name:''
         }
     },
     created(){
@@ -102,13 +103,17 @@ export default {
            var arr =['','cm','ct','cu']
            this.activeName = arr[type]
            this.deviceMsg = res.body.data;
+           getCompanyById(res.body.data.companyId).then(res=>{
+               var d = res.body.data;
+                this.name = res.body.data.name
+           })
         }) 
         getDevicePool(this.deviceId,
             format(new Date('2017/5/3').getTime(),'Y-m-d H:i:s'),
             format(new Date().getTime(),'Y-m-d H:i:s')
         ).then(res=>{
             var d = res.body.data;
-            if(d){
+            if(d.length){
                 this.bottomList.push({name:'本月用量',value:d[0].usageMonth})
                 this.bottomList.push({name:'昨日用量',value:d[0].usageYesterday})
                 this.bottomList.push({name:'剩余流量',value:d[0].userLimit - d[0].usageMonth})
@@ -135,6 +140,17 @@ export default {
         pickChange(val){
             console.log(val)
         }
+    },
+    computed:{
+        cardNumber(){
+            return this.activeName == 'cm' ?this.deviceMsg.cardNumber : ''
+        },
+        cmIccid(){
+            return this.activeName == 'cm' ?this.deviceMsg.cmIccid : ''
+        },
+        isSms(){
+            return this.activeName == 'cm' ?this.deviceMsg.isSms : ''
+        },
     }
 }
 </script>
@@ -147,6 +163,9 @@ export default {
     line-height 40px
     font-size 24px
     padding 10px 0 0 10px
+    .text
+        font-size 16px
+        padding-left 20px
 .row
     margin  40px 20px
     .col
