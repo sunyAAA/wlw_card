@@ -11,8 +11,8 @@
                 ></date-picker>
                 <i class="el-icon-menu" @click='showTable(1)'></i>
             </div>
-            <p>  单卡限量为 {{pool.name}}</p>
-            <chart color='#43a047' :data='poolData' :bottomList='poolData.bottomList'></chart>
+            <p>  {{computedName}}</p>
+            <chart  :data='poolData' :bottomList='bottomList'></chart>
         </div>
         <transition 
               name="bounce"
@@ -31,121 +31,177 @@
 </template>
 
 <script>
-import Chart from '../../components/chart/chart'
-import DatePicker from '../../components/datePicker/datePicker'
-import TableView from '../../components/tableView/tableView'
-import SearchBox from '../../components/searchBox/searchBox'
-import {format,formartPoolData,formData} from '../../api/dataUtil.js'
-import {getPoolById,getDeviceByPoolId} from '../../api/apiData.js'
+import Chart from "../../components/chart/chart";
+import DatePicker from "../../components/datePicker/datePicker";
+import TableView from "../../components/tableView/tableView";
+import SearchBox from "../../components/searchBox/searchBox";
+import {
+  format,
+  formartPoolData,
+  formData,
+  formatBottomList
+} from "../../api/dataUtil.js";
+import { getPoolById, getDeviceByPoolId } from "../../api/apiData.js";
 export default {
-    components:{Chart,DatePicker,TableView,SearchBox},
-    props:{
-        pool:{
-            type:Object,
-        }
-    },
-    data(){
-        return {
-            showTable1:false,
-            showTable2:false,
-            begin:'',
-            end:'',
-            poolData:{},
-            pageSize:5,
-            pageNo:1,
-            tableData:[],
-            filter:0,
-            totalCount:0,
-            tableLoading:true
-        }
-    },
-    mounted(){
-        var now = new Date().getTime()
-        this.end = format(now,'Y-m-d H:i:s');
-        this.begin = format(now-7*24*3600*1000,'Y-m-d H:i:s');
-        this.getPoolData()
-        this.getTableData()
-    },
-    methods:{
-        pickChange(val){
-            this.end = format(new Date(val[1]).getTime(),'Y-m-d H:i:s');
-            this.begin = format(new Date(val[0]).getTime(),'Y-m-d H:i:s');
-        },
-        showTable(i){
-            this['showTable'+i] = !this['showTable'+i]
-        },
-        getPoolData(){
-            getPoolById(this.pool.poolId,this.begin,this.end).then(res=>{
-                if(res.body.code == 1){
-                    var d = res.body.data;
-                    this.poolData = formartPoolData(d);
-                }
-            })
-        },
-        getTableData(){
-            this.tableLoading = true
-            getDeviceByPoolId(this.pool.poolId,this.pageSize,this.pageNo).then(res=>{
-                if(res.body.code == 1){
-                   this.tableData = formData(res.body.data);
-                   this.totalCount = res.body.totalCount
-                }
-                this.tableLoading = false
-            })
-        },
-        search(v){
-            this.filter = Number(v)
-        },
-        pageChange(v){
-            this.pageNo = v;
-            this.getTableData();
-        }
+  components: { Chart, DatePicker, TableView, SearchBox },
+  props: {
+    pool: {
+      type: Object
     }
-}
+  },
+  data() {
+    return {
+      showTable1: false,
+      showTable2: false,
+      begin: "",
+      end: "",
+      poolData: {
+        labels: [],
+        datasets: [
+          {
+            label: "用量(M)",
+            data: [],
+            backgroundColor: "#43a047"
+          }
+        ]
+      },
+      pageSize: 5,
+      pageNo: 1,
+      tableData: [],
+      filter: 0,
+      totalCount: 0,
+      tableLoading: true,
+      bottomList: []
+    };
+  },
+  computed:{
+    computedName(){
+      return parseInt(this.pool.name)?'单卡限量为 '+this.pool.name : this.pool.name
+    }
+  },
+  mounted() {
+    var now = new Date().getTime();
+    this.end = format(now, "Y-m-d H:i:s");
+    this.begin = format(now - 7 * 24 * 3600 * 1000, "Y-m-d H:i:s");
+    this.getPoolData();
+    this.getTableData();
+  },
+  methods: {
+    pickChange(val) {
+      this.end = format(new Date(val[1]).getTime(), "Y-m-d H:i:s");
+      this.begin = format(new Date(val[0]).getTime(), "Y-m-d H:i:s");
+      this.getPoolData();
+    },
+    showTable(i) {
+      this["showTable" + i] = !this["showTable" + i];
+    },
+    getPoolData() {
+      getPoolById(this.pool.poolId, this.begin, this.end).then(res => {
+        if (res.body.code == 1) {
+          var arr = res.body.data;
+          if (!arr.length) {
+            this.poolData = {
+              labels: [],
+              datasets: [
+                {
+                  label: "用量(M)",
+                  data: [],
+                  backgroundColor: "#43a047"
+                }
+              ]
+            };
+            return;
+          }
+          this.bottomList = formatBottomList(arr);
+          for (var i = 0; i < arr.length; i++) {
+            this.poolData.labels.push(format(arr[i].insertDate, "m-d"));
+            this.poolData.datasets[0].data.push(arr[i].yesterdayUse);
+          }
+        }
+      });
+    },
+    getTableData() {
+      this.tableLoading = true;
+      getDeviceByPoolId(this.pool.poolId, this.pageSize, this.pageNo).then(
+        res => {
+          if (res.body.code == 1) {
+            this.tableData = formData(res.body.data);
+
+            this.totalCount = res.body.totalCount;
+          }
+          this.tableLoading = false;
+        }
+      );
+    },
+    search(v) {
+      this.filter = Number(v);
+    },
+    pageChange(v) {
+      this.pageNo = v;
+      this.getTableData();
+    }
+  }
+};
 </script>
 
 <style lang="stylus" scoped>
-.pool-box
-    background #ccc
-    .title 
-        padding 10px 0 50px 10px
-        font-size 24px
-    .chart-box
-        background #fff
-        position relative
-        p
-            padding 10px 25px 0px 100px
-        .chart-icon-box
-            position absolute
-            width 54px
-            height 54px
-            line-height 54px
-            top -20px
-            left 20px
-            text-align center
-            font-size 20px
-            background #43a047
-            color #fff
-    .table-box
-        margin-top 50px
-        background #fff
-        padding 20px 0
+.pool-box {
+    background: #ccc;
 
-.picker-box
-    float right
-    padding-right 50px
-    padding-top 20px
-    position relative
-    .date-picker
-        padding-right 60px
-    &>i 
-        position absolute
-        width 50px
-        height 40px
-        top 20px
-        right 60px
-        line-height 40px
-        text-align center
-        background #f87979
-        color #fff
+    .title {
+        padding: 10px 0 50px 10px;
+        font-size: 24px;
+    }
 
+    .chart-box {
+        background: #fff;
+        position: relative;
+
+        p {
+            padding: 10px 25px 0px 100px;
+        }
+
+        .chart-icon-box {
+            position: absolute;
+            width: 54px;
+            height: 54px;
+            line-height: 54px;
+            top: -20px;
+            left: 20px;
+            text-align: center;
+            font-size: 20px;
+            background: #43a047;
+            color: #fff;
+        }
+    }
+
+    .table-box {
+        margin-top: 50px;
+        background: #fff;
+        padding: 20px 0;
+    }
+}
+
+.picker-box {
+    float: right;
+    padding-right: 50px;
+    padding-top: 20px;
+    position: relative;
+
+    .date-picker {
+        padding-right: 60px;
+    }
+
+    &>i {
+        position: absolute;
+        width: 50px;
+        height: 40px;
+        top: 20px;
+        right: 60px;
+        line-height: 40px;
+        text-align: center;
+        background: #f87979;
+        color: #fff;
+    }
+}
 </style>

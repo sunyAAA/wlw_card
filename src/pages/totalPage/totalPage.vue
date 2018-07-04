@@ -29,18 +29,13 @@
             ></date-picker>
         </div>
         <p>  总流量 （MB）</p>
-        <chart :data='allPoolData'></chart>
+        <chart :data='allPoolData' color='#26c6da'></chart>
     </div>
     <div class="blank"></div>
     <div class="table-box">
         <div class="chart-icon-box">
             <i class="el-icon-menu"></i>
         </div>
-        <!-- <div class="picker-box">
-            <date-picker 
-                @pick='pickChange'
-            ></date-picker>
-        </div> -->
         <search-box @search='search'></search-box>
         <p>设备列表</p>
         <table-view :data='deviceList' :filter='filter'
@@ -62,25 +57,21 @@ import SearchBox from "../../components/searchBox/searchBox";
 import {
   getTotalPage,
   getPoolList,
-  getAllPoolDate
+  getAllPoolDate,
+  getDeviceInfo
 } from "../../api/apiData.js";
 import { formData, format } from "../../api/dataUtil.js";
 export default {
   components: { IconBanner, Chart, DatePicker, TableView, SearchBox },
   data() {
     return {
-      //           {
-      //     name:'账号余额',
-      //     count:'250',
-      //     unit:'元'
-      // }
       deviceWorkStatus: [
-        { name: "正常台数", count: 0, unit: "台" },
-        { name: "异常台数", count: 0, unit: "台" }
+        { name: "正常台数", count: 0, unit: "台" ,type:0},
+        { name: "异常台数", count: 0, unit: "台",type:1 }
       ],
       deviceOnlineStatus: [
-        { name: "在线台数", count: 0, unit: "台" },
-        { name: "离线台数", count: 0, unit: "台" }
+        { name: "在线台数", count: 0, unit: "台" ,status:0},
+        { name: "离线台数", count: 0, unit: "台" ,status:1}
       ],
       userNum: [
         { name: "昨日用量", count: 0, unit: "M" },
@@ -90,7 +81,7 @@ export default {
       deviceList: [],
       deviceListTotal: 0,
       deviceListLoading: true,
-      filter: null,
+      filter: 0,
       pageSize: 5,
       pageNo: 1,
       begin: "",
@@ -100,7 +91,8 @@ export default {
         datasets: [
           {
             label: "总用量(M)",
-            data: []
+            data: [],
+            backgroundColor: "#26c6da"
           }
         ]
       }
@@ -115,43 +107,40 @@ export default {
       this.deviceListTotal = res.body.totalCount;
       this.deviceListLoading = false;
       var d = res.body.data;
-
-      for (var i = 0; i < d.length; i++) {
-        var card = d[i];
-        if (card.cardStatus == 0) {
-          this.deviceWorkStatus[0].count++;
-        } else {
-          this.deviceWorkStatus[1].count++;
-        }
-        if (card.onlineStatus == 1) {
-          this.deviceOnlineStatus[0].count++;
-        } else {
-          this.deviceOnlineStatus[1].count++;
-        }
-      }
     });
-    // getPoolList().then(res=>{
-    //     console.log(res.body)
-    // })
     getAllPoolDate(this.begin, this.end).then(res => {
       if (res.body.code == 1) {
         var d = res.body.data;
+        if (!d.length) {
+          this.poolData = {
+            labels: [],
+            datasets: [
+              {
+                label: "用量(M)",
+                data: [],
+                backgroundColor: "#43a047"
+              }
+            ]
+          };
+          return;
+        }
         for (var i = 0; i < d.length; i++) {
-          this.allPoolData.labels.push(format(d[i].insertDate, "Y-m-d"));
+          this.allPoolData.labels.push(format(d[i].insertDate, "m-d"));
           this.allPoolData.datasets[0].data.push(d[i].yesterdayUse);
         }
       }
-      //           datacollection: {
-      // labels: ["06-18",'06-19','06-20','06-20','06-20','06-20','06-20','06-20','06-20',"06-18",'06-20','06-20','06-20','06-20','06-20','06-20','06-20','06-20',"06-18",'06-20','06-20','06-20','06-20','06-20','06-20','06-20','06-20'],
-      // datasets: [
-      //   {
-      //     label: "用量(M)",
-      //     backgroundColor: this.color,
-      //     data: [0,0,0,0,0,0,0,0,0,0,0,0,1,2,0,1,3,0]
-      //   }
-      // ]
-      //   },
     });
+    getDeviceInfo().then(res=>{
+        if (res.body.code == 1) {
+            var d = res.body.data;
+            this.deviceWorkStatus[0].count = d.total
+            this.deviceWorkStatus[1].count = d.totalErro
+            this.deviceOnlineStatus[0].count = d.onStatus
+            this.deviceOnlineStatus[1].count = d.offStatus
+            this.userNum[0].count = d.yesterdayFlow
+            this.userNum[1].count = d.totalFlow
+        }
+    })
   },
   methods: {
     getDeviceList() {
@@ -161,8 +150,10 @@ export default {
         }
       });
     },
-    pickChange(arr) {
-      console.log(arr);
+    pickChange(val) {
+        this.end = format(new Date(val[1]).getTime(), "Y-m-d H:i:s");
+      this.begin = format(new Date(val[0]).getTime(), "Y-m-d H:i:s");
+      this.getAllPoolData();
     },
     search(v) {
       this.filter = Number(v);

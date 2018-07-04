@@ -3,9 +3,7 @@
         <div>
             <span>欢迎您，{{nickName}}</span>
 
-            <div class="avatar-box">
-                <img class="avatar" :src="avatar" alt="">
-            </div>
+
             <span class="logOut" @click='out'>
                 登出
             </span>
@@ -19,7 +17,6 @@ export default {
     data(){
         return {
             nickName:'',
-            avatar:'http://i2.w.yun.hjfile.cn/doc/201402/8a6654146af74cfd80f00db0254238ab.jpg'
         }
     },
     mounted(){

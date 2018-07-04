@@ -6,6 +6,8 @@ import router from './router'
 import VueResource from 'vue-resource'
 import config from './config'
 import storage from 'good-storage'
+import vueiInfinite from 'vue-infinite-scroll'
+Vue.use(vueiInfinite)
 Vue.use(VueResource)
 Vue.http.interceptors.push((request, next) => {
 
@@ -18,14 +20,9 @@ Vue.http.interceptors.push((request, next) => {
       }
   }
   next((response)=>{
-    if(response.body.code == 110){
+    if(response.body.code != 1){
       config.login = false
       storage.remove('u')
-      Vue.$notify({
-        title: '警告',
-        message: '用户信息校验失败,请重新登录',
-        offset: 200
-      });
     }
   })
 })

@@ -5,14 +5,8 @@
         </transition>
         <transition name='fadeLeft'>
         <div class="login-msg" v-show='loaded'>
-            <p>物联网</p>
-            <ul>
-                <li>Lorem ipsum dolor sit amet consectetur, adipisi vero possimus aut reprehenderit? <br>Ratione qui, fugit obcaecat</li>
-                <li>Lorem ipsum dolor sit amet consectetur adipisicin earum quas tempora delectus eos<br> libero consequatur sequi il</li>
-                <li>Lorem ipsum dolor sit amet consectetur adipisicin earum quas tempora delectus eos <br>libero consequatur sequi il</li>
-                <li>Lorem ipsum dolor sit amet consectetur adipisicingearum quas tempora delectus eos <br>libero consequatur sequi il</li>
-                <li>Lorem ipsum dolor sit amet consectetur adipisicingearum quas tempora delectus eos <br>libero consequatur sequi il</li>
-            </ul>
+            <p>物联网后台管理系统</p>
+
         </div>
         </transition>
     </div>

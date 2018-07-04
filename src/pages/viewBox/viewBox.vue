@@ -6,6 +6,7 @@
                 :default-active="defaultIndex"
                 background-color="#545c64"
                 text-color="#fff"
+                
                     @select='select'>
                 <el-menu-item index="0">
                     <i class="el-icon-search"></i>

@@ -1,20 +1,20 @@
 
 
-export function formData(arr){
-    if(!arr){
+export function formData(arr) {
+    if (!arr) {
         return arr
     }
-    for(var i =0;i<arr.length;i++){
+    for (var i = 0; i < arr.length; i++) {
         var item = arr[i]
-        item.serveTime  = format(item.serveTime,'Y-m-d');
-        item.endTime  = format(item.endTime,'Y-m-d');
+        item.serveTime = format(item.serveTime, 'Y-m-d');
+        item.endTime = format(item.endTime, 'Y-m-d');
     }
     return arr
 }
 
 
 
-export function format (timestamp, formats) {
+export function format(timestamp, formats) {
     // formats格式包括
     // 1. Y-m-d
     // 2. Y-m-d H:i:s
@@ -51,39 +51,43 @@ export function format (timestamp, formats) {
     });
 }
 
-export function formartPoolData(arr){
-    if(!arr.length){
+export function formartPoolData(arr, color) {
+    if (!arr.length) {
         return {}
     }
-    var result ={
-            labels:[],
-            datasets:[
-                {
-                    label:'总用量(M)',
-                    data:[]
-                }
-            ],
-            bottomList:[
-                {
-                    name : '本月用量',
-                    unit:'M',
-                    value:arr[arr.length-1].monthSum  || 0
-                },
-                {
-                    name:'昨日用量',
-                    unit:'M',
-                    value:arr[arr.length -1].yesterdayUse
-                },
-                {
-                    name:'卡数',
-                    unit:'张',
-                    value:arr[0].countNum || 0,
-                }
-            ]
+    var result = {
+        labels: [],
+        datasets: [
+            {
+                label: '用量(M)',
+                data: [],
+                backgroundColor: color
+            }
+        ]
     }
-    for(var i = 0 ;i<arr.length;i++){
-        result.labels.push(format(arr[i].insertDate,'m-d'));
+    for (var i = 0; i < arr.length; i++) {
+        result.labels.push(format(arr[i].insertDate, 'm-d'));
         result.datasets[0].data.push(arr[i].yesterdayUse)
     }
     return result;
+}
+
+export function formatBottomList(arr) {
+    return [
+        {
+            name: '本月用量',
+            unit: 'M',
+            value: arr[arr.length - 1].monthSum || 0
+        },
+        {
+            name: '昨日用量',
+            unit: 'M',
+            value: arr[arr.length - 1].yesterdayUse
+        },
+        {
+            name: '卡数',
+            unit: '张',
+            value: arr[0].countNum || 0,
+        }
+    ]
 }

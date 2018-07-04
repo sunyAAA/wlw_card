@@ -6,7 +6,7 @@
         <div class="right">
             <el-row>
                 <el-col :span="colSpan" v-for="(item,index) in data" :key='index'>
-                    <p class="data">{{item.count}}<span class="unit">{{item.unit}}</span></p>
+                    <p  @click='goDevice(item)' class="data">{{item.count}}<span class="unit">{{item.unit}}</span></p>
                     <p class="name">{{item.name}}</p>
                 </el-col>
             </el-row>
@@ -62,6 +62,17 @@ export default {
                 this.data.splice(2)
             }
             return 24/this.data.length
+        }
+    },
+    methods:{
+        goDevice(item){
+            console.log(item)
+            if(item.type!=null || item.status!=null){
+                var params;
+                params = item.type!=null?'type=':'status=';
+                this.$router.push('/device?'+params+(item.type!=null?item.type:item.status))
+            }
+
         }
     }
 }

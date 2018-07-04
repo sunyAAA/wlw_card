@@ -2,6 +2,7 @@
     <div class="device-page">
         <p class="title">设备</p>
         <p class="page-desc"><i class="el-icon-menu"></i>{{deviceTitle}}</p>
+        <search-box @search='search'></search-box>
         <table-view :data='deviceList' :filter='filter'
             :total='deviceListTotal' :loading="deviceListLoading"
             :pageSize='pageSize'
@@ -23,13 +24,21 @@ export default {
       deviceList: [],
       deviceListTotal: 0,
       deviceListLoading: true,
-      filter: null,
+      filter: 0,
       pageSize: 10,
-      pageNo: 1
+      pageNo: 1,
+      type:null,
+      status:null,
     };
   },
   mounted() {
-    getTotalPage(this.pageSize,this.pageNo).then(res => {
+    this.params = this.$route.query;
+
+    this.type = this.params.type
+    this.status = this.params.status
+    if(this.type !=null){this.deviceTitle = this.type == 1? '异常设备':'正常设备'};
+    if(this.status !=null){this.deviceTitle = this.status == 1?'离线设备':'在线设备'}
+    getTotalPage(this.pageSize,this.pageNo,this.type,this.status).then(res => {
       if (res.body.code == 1) {
         this.deviceList = formData(res.body.data);
         this.deviceListTotal = res.body.totalCount;
@@ -40,7 +49,7 @@ export default {
   methods: {
       getDeviceList(){
             this.deviceListLoading=true
-             getTotalPage(this.pageSize,this.pageNo).then(res=>{
+             getTotalPage(this.pageSize,this.pageNo,this.type,this.status).then(res=>{
                if (res.body.code == 1) {
                  this.deviceList = formData(res.body.data);
                }

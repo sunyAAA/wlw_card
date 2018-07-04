@@ -1,7 +1,7 @@
 <template>
     <div class="table-view">
     <el-table
-    :data="data"
+    :data="filterData"
     v-loading='loading'
     element-loading-text="拼命加载中"
     element-loading-spinner="el-icon-loading"
@@ -76,7 +76,7 @@
       class="pagination"
     layout="prev, pager, next"
     :total="total"
-    :page-size='pagesize'
+    :page-size='pageSize'
     @current-change='pagenoChange'
     >
   </el-pagination>
@@ -88,8 +88,8 @@ export default {
   props: {
     data: {
       type: Array,
-      default:function(){
-        return []
+      default: function() {
+        return [];
       }
     },
     total: {
@@ -102,14 +102,14 @@ export default {
     loading: {
       type: Boolean
     },
-    pageSize:{
-      type:Number,
-      default:5
+    pageSize: {
+      type: Number,
+      default: 5
     }
   },
   data() {
     return {
-      pageno: 1,
+      pageno: 1
     };
   },
   computed: {
@@ -119,11 +119,20 @@ export default {
     end() {
       return this.pagesize * this.pageno;
     },
-    DataTotal(){
-      return this.total
+    DataTotal() {
+      return this.total;
     },
-    pageS(){
-      return this.pagesize
+    pageS() {
+      return this.pagesize;
+    },
+    filterData() {
+      if (this.filter) {
+        return this.data.filter(item => {
+          return item.deviceId == this.filter;
+        });
+      }else{
+        return this.data
+      }
     }
   },
   methods: {
@@ -136,24 +145,43 @@ export default {
     filterTag(value, row) {
       return row.tag === value;
     },
-    pagenoChange(val){
-      this.$emit('pageNoChange',val)
+    pagenoChange(val) {
+      this.$emit("pageNoChange", val);
     },
-    go(row){
-     this.$router.push('/deviceDetail?id='+row.deviceId)
+    go(row) {
+      this.$router.push("/deviceDetail?id=" + row.deviceId);
     },
-    formartStatus(status){
-      switch(status){
-        case 0 :return '正常';break;
-        case 1 :return '单向停机';break;
-        case 2 :return '停机';break;
-        case 3 :return '预销号';break;
-        case 4 :return '销号';break;
-        case 5 :return '过户';break;
-        case 6 :return '休眠';break;
-        case 7 :return '待激活';break;
-        case 99 :return '号码不存在';break;
-        default : return '异常'
+    formartStatus(status) {
+      switch (status) {
+        case 0:
+          return "正常";
+          break;
+        case 1:
+          return "单向停机";
+          break;
+        case 2:
+          return "停机";
+          break;
+        case 3:
+          return "预销号";
+          break;
+        case 4:
+          return "销号";
+          break;
+        case 5:
+          return "过户";
+          break;
+        case 6:
+          return "休眠";
+          break;
+        case 7:
+          return "待激活";
+          break;
+        case 99:
+          return "号码不存在";
+          break;
+        default:
+          return "异常";
       }
     }
   }

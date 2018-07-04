@@ -1,8 +1,10 @@
 import Vue from 'vue';
 
 
-export function getTotalPage(pagesize,pageno){
-    return Vue.http.post('api/device/getList',{pagesize,pageno})
+export function getTotalPage(pagesize,pageno,type,status,){
+    type= !type?null:type;
+    status=!status?null:status;
+    return Vue.http.post('api/device/getList',{pagesize,pageno,type,status})
 }
 
 export function getPoolList(){
@@ -34,4 +36,7 @@ export function getPoolById(id,begin,end){
 
 export function getDeviceByPoolId(id,pageSize,pageNo){
     return Vue.http.get('api/pool/getDeviceByPoolId?poolId='+id+'&pagesize='+pageSize+'&pageno='+pageNo)
+}
+export function getDeviceInfo(){
+    return Vue.http.post('api/device/getDeviceInfo',{})
 }

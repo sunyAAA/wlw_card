@@ -1,5 +1,8 @@
 <template>
-    <div class="chart">
+    <div class="chart"  v-loading="loading"
+       element-loading-text="暂无每日用量数据"
+       element-loading-spinner="el-icon-time"
+    >
         <line-chart :data='data'
   :height="400"></line-chart>
     <el-row>
@@ -7,7 +10,6 @@
         <p class="count">{{item.value}} <span class="unit">{{item.unit}}</span> </p>
         <p class="name">{{item.name}}</p>
       </el-col>
-
     </el-row>
     </div>
 </template>
@@ -30,19 +32,11 @@ export default {
   components: {
     LineChart
   },
-  data() {
-    return {
-      datacollection: {
-        labels: ["06-18",'06-19','06-20','06-20','06-20','06-20','06-20','06-20','06-20',"06-18",'06-20','06-20','06-20','06-20','06-20','06-20','06-20','06-20',"06-18",'06-20','06-20','06-20','06-20','06-20','06-20','06-20','06-20'],
-        datasets: [
-          {
-            label: "用量(M)",
-            backgroundColor: this.color,
-            data: [0,0,0,0,0,0,0,0,0,0,0,0,1,2,0,1,3,0]
-          }
-        ]
-      },
-    };
+
+  computed:{
+    loading(){
+      return this.data?this.data.labels.length?false:true:true
+    }
   }
 };
 </script>
