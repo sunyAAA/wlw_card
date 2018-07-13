@@ -71,8 +71,8 @@ export default {
         { name: "异常台数", count: 0, unit: "台", type: 1 }
       ],
       deviceOnlineStatus: [
-        { name: "在线台数", count: 0, unit: "台", status: 0 },
-        { name: "离线台数", count: 0, unit: "台", status: 1 }
+        { name: "在线台数", count: 0, unit: "台", status: 1 },
+        { name: "离线台数", count: 0, unit: "台", status: 0 }
       ],
       userNum: [
         { name: "昨日用量", count: 0, unit: "M" },

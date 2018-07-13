@@ -149,7 +149,7 @@ export default {
           this.chartData.rows = [];
           for (var item of d) {
             this.chartData.rows.push({
-              "日期": format(item.insertDate, "m-d"),
+              "日期": format(item.insertTime, "m-d"),
               "每日用量M": parseInt( item.usageYesterday / 1024)
             });
           }
