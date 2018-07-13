@@ -35,6 +35,8 @@ import Chart from "../../components/chart/chart";
 import DatePicker from "../../components/datePicker/datePicker";
 import TableView from "../../components/tableView/tableView";
 import SearchBox from "../../components/searchBox/searchBox";
+import storage from "good-storage";
+
 import {
   format,
   formartPoolData,
@@ -56,14 +58,8 @@ export default {
       begin: "",
       end: "",
       poolData: {
-        labels: [],
-        datasets: [
-          {
-            label: "用量(M)",
-            data: [],
-            backgroundColor: "#43a047"
-          }
-        ]
+        columns: ["日期", "每日用量M"],
+        rows: []
       },
       pageSize: 5,
       pageNo: 1,
@@ -74,15 +70,18 @@ export default {
       bottomList: []
     };
   },
-  computed:{
-    computedName(){
-      return parseInt(this.pool.name)?'单卡限量为 '+this.pool.name : this.pool.name
+  computed: {
+    computedName() {
+      return parseInt(this.pool.name)
+        ? "单卡限量为 " + this.pool.name
+        : this.pool.name;
     }
   },
   mounted() {
     var now = new Date().getTime();
     this.end = format(now, "Y-m-d H:i:s");
     this.begin = format(now - 7 * 24 * 3600 * 1000, "Y-m-d H:i:s");
+    this.status = storage.get("u").companyId == 1 ? 1 : 0;
     this.getPoolData();
     this.getTableData();
   },
@@ -96,29 +95,21 @@ export default {
       this["showTable" + i] = !this["showTable" + i];
     },
     getPoolData() {
-      getPoolById(this.pool.poolId, this.begin, this.end).then(res => {
-        if (res.body.code == 1) {
-          var arr = res.body.data;
-          if (!arr.length) {
-            this.poolData = {
-              labels: [],
-              datasets: [
-                {
-                  label: "用量(M)",
-                  data: [],
-                  backgroundColor: "#43a047"
-                }
-              ]
-            };
-            return;
-          }
-          this.bottomList = formatBottomList(arr);
-          for (var i = 0; i < arr.length; i++) {
-            this.poolData.labels.push(format(arr[i].insertDate, "m-d"));
-            this.poolData.datasets[0].data.push(arr[i].yesterdayUse);
+      getPoolById(this.pool.poolId, this.begin, this.end, this.status).then(
+        res => {
+          if (res.body.code == 1) {
+            var d = res.body.data;
+            this.poolData.rows = [];
+            this.bottomList = formatBottomList(d);
+            for (var i = 0; i < d.length; i++) {
+              this.poolData.rows.push({
+                "日期": format(d[i].insertDate, "Y-m-d"),
+                "每日用量M": parseInt(d[i].yesterdayUse / 1024)
+              });
+            }
           }
         }
-      });
+      );
     },
     getTableData() {
       this.tableLoading = true;
@@ -146,62 +137,62 @@ export default {
 
 <style lang="stylus" scoped>
 .pool-box {
-    background: #ccc;
+  background: #ccc;
 
-    .title {
-        padding: 10px 0 50px 10px;
-        font-size: 24px;
+  .title {
+    padding: 10px 0 50px 10px;
+    font-size: 24px;
+  }
+
+  .chart-box {
+    background: #fff;
+    position: relative;
+
+    p {
+      padding: 10px 25px 0px 100px;
     }
 
-    .chart-box {
-        background: #fff;
-        position: relative;
-
-        p {
-            padding: 10px 25px 0px 100px;
-        }
-
-        .chart-icon-box {
-            position: absolute;
-            width: 54px;
-            height: 54px;
-            line-height: 54px;
-            top: -20px;
-            left: 20px;
-            text-align: center;
-            font-size: 20px;
-            background: #43a047;
-            color: #fff;
-        }
+    .chart-icon-box {
+      position: absolute;
+      width: 54px;
+      height: 54px;
+      line-height: 54px;
+      top: -20px;
+      left: 20px;
+      text-align: center;
+      font-size: 20px;
+      background: #43a047;
+      color: #fff;
     }
+  }
 
-    .table-box {
-        margin-top: 50px;
-        background: #fff;
-        padding: 20px 0;
-    }
+  .table-box {
+    margin-top: 50px;
+    background: #fff;
+    padding: 20px 0;
+  }
 }
 
 .picker-box {
-    float: right;
-    padding-right: 50px;
-    padding-top: 20px;
-    position: relative;
+  float: right;
+  padding-right: 50px;
+  padding-top: 20px;
+  position: relative;
 
-    .date-picker {
-        padding-right: 60px;
-    }
+  .date-picker {
+    padding-right: 60px;
+  }
 
-    &>i {
-        position: absolute;
-        width: 50px;
-        height: 40px;
-        top: 20px;
-        right: 60px;
-        line-height: 40px;
-        text-align: center;
-        background: #f87979;
-        color: #fff;
-    }
+  &>i {
+    position: absolute;
+    width: 50px;
+    height: 40px;
+    top: 20px;
+    right: 60px;
+    line-height: 40px;
+    text-align: center;
+    background: #f87979;
+    color: #fff;
+  }
 }
 </style>

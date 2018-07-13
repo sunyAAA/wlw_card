@@ -130,8 +130,8 @@ export default {
         return this.data.filter(item => {
           return item.deviceId == this.filter;
         });
-      }else{
-        return this.data
+      } else {
+        return this.data;
       }
     }
   },
@@ -150,6 +150,9 @@ export default {
     },
     go(row) {
       this.$router.push("/deviceDetail?id=" + row.deviceId);
+    },
+    cy(num) {
+      return num / 1024;
     },
     formartStatus(status) {
       switch (status) {

@@ -2,7 +2,7 @@
 <template>
   <div id="app">
     <login-page v-if='!isLogin' @login='check'></login-page>
-    <view-box v-else @out='out'></view-box>
+    <view-box v-else @out='out' @fail='fail'></view-box>
   </div>
 </template>
 
@@ -24,9 +24,11 @@ export default {
     check(statu){
       config.login = statu
       this.isLogin = config.login
-      console.log(config)
     },
     out(){
+      this.isLogin = config.login = false
+    },
+    fail(){
       this.isLogin = config.login = false
     }
   },

@@ -29,6 +29,7 @@
             ></date-picker>
         </div>
         <p>  总流量 （MB）</p>
+        <p class="tips">数量为"0"可能是运营商数据没有及时更新导致</p>
         <chart :data='allPoolData' color='#26c6da'></chart>
     </div>
     <div class="blank"></div>
@@ -66,12 +67,12 @@ export default {
   data() {
     return {
       deviceWorkStatus: [
-        { name: "正常台数", count: 0, unit: "台" ,type:0},
-        { name: "异常台数", count: 0, unit: "台",type:1 }
+        { name: "正常台数", count: 0, unit: "台", type: 0 },
+        { name: "异常台数", count: 0, unit: "台", type: 1 }
       ],
       deviceOnlineStatus: [
-        { name: "在线台数", count: 0, unit: "台" ,status:0},
-        { name: "离线台数", count: 0, unit: "台" ,status:1}
+        { name: "在线台数", count: 0, unit: "台", status: 0 },
+        { name: "离线台数", count: 0, unit: "台", status: 1 }
       ],
       userNum: [
         { name: "昨日用量", count: 0, unit: "M" },
@@ -87,15 +88,20 @@ export default {
       begin: "",
       end: "",
       allPoolData: {
-        labels: [],
-        datasets: [
-          {
-            label: "总用量(M)",
-            data: [],
-            backgroundColor: "#26c6da"
-          }
-        ]
+        columns: ["日期", "总用量M"],
+        rows: []
       }
+      //       chartData: {
+      //   columns: ['日期', '访问用户'],
+      //   rows: [
+      //     { '日期': '1/1', '访问用户': 1393},
+      //     { '日期': '1/2', '访问用户': 3530},
+      //     { '日期': '1/3', '访问用户': 2923},
+      //     { '日期': '1/4', '访问用户': 1723},
+      //     { '日期': '1/5', '访问用户': 3792 },
+      //     { '日期': '1/6', '访问用户': 4593}
+      //   ]
+      // }
     };
   },
   created() {
@@ -108,39 +114,18 @@ export default {
       this.deviceListLoading = false;
       var d = res.body.data;
     });
-    getAllPoolDate(this.begin, this.end).then(res => {
+    this.getAllPool()
+    getDeviceInfo().then(res => {
       if (res.body.code == 1) {
         var d = res.body.data;
-        if (!d.length) {
-          this.poolData = {
-            labels: [],
-            datasets: [
-              {
-                label: "用量(M)",
-                data: [],
-                backgroundColor: "#43a047"
-              }
-            ]
-          };
-          return;
-        }
-        for (var i = 0; i < d.length; i++) {
-          this.allPoolData.labels.push(format(d[i].insertDate, "m-d"));
-          this.allPoolData.datasets[0].data.push(d[i].yesterdayUse);
-        }
+        this.deviceWorkStatus[0].count = d.total;
+        this.deviceWorkStatus[1].count = d.totalErro;
+        this.deviceOnlineStatus[0].count = d.onStatus;
+        this.deviceOnlineStatus[1].count = d.offStatus;
+        this.userNum[0].count = d.yesterdayFlow;
+        this.userNum[1].count = d.totalFlow;
       }
     });
-    getDeviceInfo().then(res=>{
-        if (res.body.code == 1) {
-            var d = res.body.data;
-            this.deviceWorkStatus[0].count = d.total
-            this.deviceWorkStatus[1].count = d.totalErro
-            this.deviceOnlineStatus[0].count = d.onStatus
-            this.deviceOnlineStatus[1].count = d.offStatus
-            this.userNum[0].count = d.yesterdayFlow
-            this.userNum[1].count = d.totalFlow
-        }
-    })
   },
   methods: {
     getDeviceList() {
@@ -151,9 +136,9 @@ export default {
       });
     },
     pickChange(val) {
-        this.end = format(new Date(val[1]).getTime(), "Y-m-d H:i:s");
+      this.end = format(new Date(val[1]).getTime(), "Y-m-d H:i:s");
       this.begin = format(new Date(val[0]).getTime(), "Y-m-d H:i:s");
-      this.getAllPoolData();
+      this.getAllPool();
     },
     search(v) {
       this.filter = Number(v);
@@ -161,6 +146,21 @@ export default {
     pageChange(v) {
       this.pageNo = v;
       this.getDeviceList();
+    },
+    getAllPool() {
+      getAllPoolDate(this.begin, this.end).then(res => {
+        if (res.body.code == 1) {
+          var d = res.body.data;
+          this.allPoolData.rows=[];
+          for (var i = 0; i < d.length; i++) {
+            this.allPoolData.rows.push({
+              "日期": format(d[i].insertDate, "m-d"),
+              "总用量M": parseInt(d[i].yesterdayUse / 1024)
+            });
+          }
+          console.log(this.allPoolData);
+        }
+      });
     }
   }
 };
@@ -241,6 +241,11 @@ export default {
         background: #f87979;
         color: #fff;
     }
+}
+
+.tips {
+    font-size: 12px;
+    color: #e4393c;
 }
 </style>
 

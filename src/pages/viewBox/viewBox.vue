@@ -30,58 +30,70 @@
 </template>
 
 <script>
-import TopBar 
-from "../../components/topBar/topBar";
+import TopBar from "../../components/topBar/topBar";
+import storage from "good-storage";
 export default {
   data() {
     return {
-      routeList: ["/total", "/pool",'/device'],
-      defaultIndex:'0',
-      title:'物联网',
-      barStyle:{
-          width:'240px'
+      routeList: ["/total", "/pool", "/device"],
+      defaultIndex: "0",
+      title: "物联网",
+      barStyle: {
+        width: "240px"
       }
     };
   },
   methods: {
     select(index) {
-      this.$router.push({path :this.routeList[index]});
+      if (!storage.get("u")) {
+        this.$notify({
+          title: "警告",
+          message: "登录已失效，请重新登录",
+          offset: 200
+        });
+        this.$emit("fail");
+      }
+      this.$router.push({ path: this.routeList[index] });
     },
-    sendOut(){
-        this.$emit('out')
+    sendOut() {
+      this.$emit("out");
     }
   },
-  created(){
-      let i = this.routeList.indexOf(this.$route.path)
-      this.defaultIndex = (i< 0 ? 0 : i).toString()
+  created() {
+    let i = this.routeList.indexOf(this.$route.path);
+    this.defaultIndex = (i < 0 ? 0 : i).toString();
   },
   components: { TopBar }
 };
 </script>
 
 <style lang="stylus" scoped>
-.slide-bar 
+.slide-bar {
     position: fixed;
     left: 0;
     bottom: 0;
     top: 0;
     background: rgb(84, 92, 100);
     border: none;
-    .gs-title 
+
+    .gs-title {
         height: 50px;
         text-align: center;
         line-height: 50px;
         background: #00bcd4;
         color: #fff;
         font-size: 22px;
+    }
+}
 
-.el-menu
-    border-right 1px solid #545c64
-.content 
+.el-menu {
+    border-right: 1px solid #545c64;
+}
+
+.content {
     padding-left: 240px;
-    padding-top 50px;
-
-
+    padding-top: 50px;
+}
 </style>
 
 

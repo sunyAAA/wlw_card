@@ -16,7 +16,7 @@
                         <div class="card-box">
                             <card name="卡号" :val="cardNumber || ''"></card>
                             <card name="ICCID" :val="cmIccid || ''"></card>
-                            <card name="IMSI" :val="isSms || ''"></card>
+                            <card name="IMSI" :val="cmImsi || ''"></card>
                         </div>
                     </div>
                 </panel>
@@ -46,7 +46,7 @@
                         <div class="card-box">
                             <card name="流量限额" :val="deviceMsg.userLimit"></card>
                             <card name="达量断网" val=""></card>
-                            <card name="月租" :val="deviceMsg.sysUserLimit"></card>
+                            <card v-show='sys'  name="实际订购套餐" :val="sys"></card>
                         </div>
                     </div>
                 </panel>
@@ -63,6 +63,7 @@
             ></date-picker>
         </div>
         <p>  总流量 （MB）</p>
+        <p class="tips">数量为"0"可能是运营商数据没有及时更新导致</p>
         <chart :data='chartData' :bottomList='bottomList'></chart>
     </div>
     </div>
@@ -79,6 +80,7 @@ import {
   getDevicePool,
   getCompanyById
 } from "../../api/apiData.js";
+import storage from "good-storage";
 export default {
   components: { Panel, Card, chart, DatePicker },
   data() {
@@ -88,19 +90,14 @@ export default {
       deviceMsg: {},
       bottomList: [],
       chartData: {
-        labels: [],
-        datasets: [
-          {
-            label: "单卡流量",
-            backgroundColor: "#e4393c",
-            data: []
-          }
-        ]
+        columns: ["日期","每日用量M"],
+        rows: []
       },
       name: ""
     };
   },
   created() {
+    this.companyId = storage.get("u").companyId;
     var now = new Date().getTime();
     this.end = format(now, "Y-m-d H:i:s");
     this.begin = format(now - 7 * 24 * 3600 * 1000, "Y-m-d H:i:s");
@@ -115,9 +112,19 @@ export default {
         this.name = res.body.data.name;
       });
     });
-    this.getDevicePoolData()
+    this.getDevicePoolData();
   },
   methods: {
+    filter() {
+      this.deviceMsg.userLimit =
+        this.deviceMsg.userLimit >= 1024
+          ? this.deviceMsg.userLimit / 1024 + "G"
+          : this.deviceMsg.userLimit + "M";
+      this.deviceMsg.sysUserLimit =
+        this.deviceMsg.sysUserLimit >= 1024
+          ? this.deviceMsg.sysUserLimit / 1024 + "G"
+          : this.deviceMsg.sysUserLimit + "M";
+    },
     pickChange(val) {
       this.end = format(new Date(val[1]).getTime(), "Y-m-d H:i:s");
       this.begin = format(new Date(val[0]).getTime(), "Y-m-d H:i:s");
@@ -127,19 +134,24 @@ export default {
       getDevicePool(this.deviceId, this.begin, this.end).then(res => {
         var d = res.body.data;
         if (d.length) {
-          this.bottomList.push({ name: "本月用量", value: d[0].usageMonth });
+          this.bottomList.push({
+            name: "本月用量",
+            value: (d[0].usageMonth / 1024).toFixed(2)
+          });
           this.bottomList.push({
             name: "昨日用量",
-            value: d[0].usageYesterday
+            value: (d[0].usageYesterday / 1024).toFixed(2)
           });
           this.bottomList.push({
             name: "剩余流量",
-            value: d[0].userLimit - d[0].usageMonth
+            value: (d[0].userLimit - d[0].usageMonth / 1024).toFixed(2)
           });
-
+          this.chartData.rows = [];
           for (var item of d) {
-            this.chartData.labels.push(format(item.insertTime, "m-d"));
-            this.chartData.datasets[0].data.push(item.usageYesterday);
+            this.chartData.rows.push({
+              "日期": format(item.insertDate, "m-d"),
+              "每日用量M": parseInt( item.usageYesterday / 1024)
+            });
           }
         }
 
@@ -163,8 +175,11 @@ export default {
     cmIccid() {
       return this.activeName == "cm" ? this.deviceMsg.cmIccid : "";
     },
-    isSms() {
-      return this.activeName == "cm" ? this.deviceMsg.isSms : "";
+    cmImsi() {
+      return this.activeName == "cm" ? this.deviceMsg.cmImsi : "";
+    },
+    sys() {
+      return this.companyId == 1 ? this.deviceMsg.sysUserLimit : "";
     }
   }
 };
@@ -233,5 +248,10 @@ export default {
     margin-top: 20px;
     margin-right: 50px;
     float: right;
+}
+
+.tips {
+    font-size: 12px;
+    color: #e4393c;
 }
 </style>

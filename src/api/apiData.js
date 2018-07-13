@@ -30,8 +30,12 @@ export function getAllPoolDate(begin,end){
 export function getMypool(){
     return Vue.http.get('api/pool/listPool')
 }
-export function getPoolById(id,begin,end){
-    return Vue.http.get('api/pool/getPoolList?poolId='+id+'&beginTime='+begin+'&endTime='+end)
+export function getPoolById(id,begin,end,status){
+    if(status == 1 ){
+        return Vue.http.get('api/pool/getPoolList?poolId='+id+'&beginTime='+begin+'&endTime='+end+'&status='+status)
+    }else{
+        return Vue.http.get('api/pool/getPoolList?poolId='+id+'&beginTime='+begin+'&endTime='+end)
+    }
 }
 
 export function getDeviceByPoolId(id,pageSize,pageNo){

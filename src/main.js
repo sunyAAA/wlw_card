@@ -20,9 +20,9 @@ Vue.http.interceptors.push((request, next) => {
       }
   }
   next((response)=>{
-    if(response.body.code != 1){
-      config.login = false
-      storage.remove('u')
+    if(response.body.code == 110){
+      config.login = false;
+      storage.remove('u');
     }
   })
 })

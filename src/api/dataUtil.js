@@ -8,6 +8,8 @@ export function formData(arr) {
         var item = arr[i]
         item.serveTime = format(item.serveTime, 'Y-m-d');
         item.endTime = format(item.endTime, 'Y-m-d');
+        item.usageMonth = (item.usageMonth / 1024).toFixed(2);
+        item.usageYesterday = (item.usageYesterday / 1024).toFixed(2);
     }
     return arr
 }
@@ -67,7 +69,7 @@ export function formartPoolData(arr, color) {
     }
     for (var i = 0; i < arr.length; i++) {
         result.labels.push(format(arr[i].insertDate, 'm-d'));
-        result.datasets[0].data.push(arr[i].yesterdayUse)
+        result.datasets[0].data.push((arr[i].yesterdayUse/1024).toFixed(2))
     }
     return result;
 }
@@ -77,12 +79,12 @@ export function formatBottomList(arr) {
         {
             name: '本月用量',
             unit: 'M',
-            value: arr[arr.length - 1].monthSum || 0
+            value: ((arr[arr.length - 1].monthSum)/1024).toFixed(2) || 0
         },
         {
             name: '昨日用量',
             unit: 'M',
-            value: arr[arr.length - 1].yesterdayUse
+            value: ((arr[arr.length - 1].yesterdayUse)/1024).toFixed(2)
         },
         {
             name: '卡数',
