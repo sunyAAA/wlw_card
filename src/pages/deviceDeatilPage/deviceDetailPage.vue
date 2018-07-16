@@ -10,8 +10,8 @@
                     <div slot="tab">
                         <el-tabs v-model="activeName" aria-readonly style="height: 40px;float:right">
                             <el-tab-pane name='cm' label="移动"></el-tab-pane>
-                            <el-tab-pane name='ct' label="联通"></el-tab-pane>
-                            <el-tab-pane name='cu' label="电信"></el-tab-pane>
+                            <el-tab-pane name='cu' label="联通"></el-tab-pane>
+                            <el-tab-pane name='ct' label="电信"></el-tab-pane>
                         </el-tabs>  
                         <div class="card-box">
                             <card name="卡号" :val="cardNumber || ''"></card>
@@ -169,14 +169,14 @@ export default {
     }
   },
   computed: {
-    cardNumber() {
-      return this.activeName == "cm" ? this.deviceMsg.cardNumber : "";
+    cardNumber() {   
+      return  this.deviceMsg.cardNumber 
     },
     cmIccid() {
-      return this.activeName == "cm" ? this.deviceMsg.cmIccid : "";
+      return  this.deviceMsg[this.activeName + 'Iccid']
     },
     cmImsi() {
-      return this.activeName == "cm" ? this.deviceMsg.cmImsi : "";
+      return this.deviceMsg[this.activeName + 'Imsi'];
     },
     sys() {
       return this.companyId == 1 ? this.deviceMsg.sysUserLimit : "";
