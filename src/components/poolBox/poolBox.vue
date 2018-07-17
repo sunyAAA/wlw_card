@@ -72,7 +72,7 @@ export default {
   },
   computed: {
     computedName() {
-      return parseInt(this.pool.name)
+      return parseFloat(this.pool.name)
         ? "单卡限量为 " + this.pool.name
         : this.pool.name;
     }
@@ -104,7 +104,7 @@ export default {
             for (var i = 0; i < d.length; i++) {
               this.poolData.rows.push({
                 "日期": format(d[i].insertDate, "Y-m-d"),
-                "每日用量M": parseInt(d[i].yesterdayUse / 1024)
+                "每日用量M": parseFloat(d[i].yesterdayUse / 1024)
               });
             }
           }

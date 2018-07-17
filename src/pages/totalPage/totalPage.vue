@@ -144,7 +144,7 @@ export default {
           for (var i = 0; i < d.length; i++) {
             this.allPoolData.rows.push({
               "日期": format(d[i].insertDate, "m-d"),
-              "总用量M": parseInt(d[i].yesterdayUse / 1024)
+              "总用量M": parseFloat(d[i].yesterdayUse / 1024)
             });
           }
           console.log(this.allPoolData);

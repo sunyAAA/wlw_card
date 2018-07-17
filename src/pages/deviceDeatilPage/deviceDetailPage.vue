@@ -148,9 +148,10 @@ export default {
           });
           this.chartData.rows = [];
           for (var item of d) {
+              console.log(item.usageYesterday/1024)
             this.chartData.rows.push({
               "日期": format(item.insertTime, "m-d"),
-              "每日用量M": parseInt( item.usageYesterday / 1024)
+              "每日用量M": parseFloat( item.usageYesterday / 1024)
             });
           }
         }

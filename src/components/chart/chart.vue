@@ -14,46 +14,32 @@
 </template>
 
 <script>
-import VeLine from 'v-charts/lib/line.common'
+import VeLine from "v-charts/lib/line.common";
 export default {
-  props:{
-    color:{
-      type:String,
-      default:'#f87979'
+  props: {
+    color: {
+      type: String,
+      default: "#f87979"
     },
-    bottomList:{
-      type:Array,
+    bottomList: {
+      type: Array
     },
-    data:{
-
-    }
+    data: {}
   },
-  data () {
-      this.chartSettings = {
-        area: true,
-        xAxisType:'category',
-      }
-      return {
-        chartData: {
-          columns: ['日期', '访问用户'],
-          rows: [
-            { '日期': '1/1', '访问用户': 1393},
-            { '日期': '1/2', '访问用户': 3530},
-            { '日期': '1/3', '访问用户': 2923},
-            { '日期': '1/4', '访问用户': 1723},
-            { '日期': '1/5', '访问用户': 3792 },
-            { '日期': '1/6', '访问用户': 4593}
-          ]
-        }
-      }
-      },
+  data() {
+    this.chartSettings = {
+      area: true,
+      xAxisType: "category"
+    };
+    return {};
+  },
   components: {
     VeLine
   },
 
-  computed:{
-    loading(){
-      return this.data?this.data.rows.length?false:true:true
+  computed: {
+    loading() {
+      return this.data ? (this.data.rows.length ? false : true) : true;
     }
   }
 };

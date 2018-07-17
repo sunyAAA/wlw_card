@@ -23,7 +23,7 @@ export default {
                 left:0,
                 right:0,
                 bottom:0,
-                background:"url("+require('../../assets/img/bg/bg3.jpg')+") no-repeat",
+                background:"url("+require('../../assets/img/bg/bg1.jpg')+") no-repeat",
                 backgroundSize:'100% 100%'
             },
             loaded:false
