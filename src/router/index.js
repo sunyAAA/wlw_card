@@ -1,9 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import TotalPage from '../pages/totalPage/totalPage.vue'
-import PoolPage from '../pages/poolPage/poolPage.vue'
-import DevicePage from '../pages/devicePage/devicePage.vue'
-import DeviceDetailPage from '../pages/deviceDeatilPage/deviceDetailPage.vue'
 
 Vue.use(Router)
 
@@ -19,15 +16,21 @@ export default new Router({
         },
         {
             path:'/pool',
-            component:PoolPage
+            component:function (resolve) {
+                require(['../pages/poolPage/poolPage.vue'], resolve)
+            } 
         },
         {
             path:'/device',
-            component:DevicePage
+            component:function (resolve) {
+                require(['../pages/devicePage/devicePage.vue'], resolve)
+            } 
         },
         {
             path:'/deviceDetail',
-            component:DeviceDetailPage
+            component:function (resolve) {
+                require(['../pages/deviceDeatilPage/deviceDetailPage.vue'], resolve)
+            } 
         }
     ]
 })

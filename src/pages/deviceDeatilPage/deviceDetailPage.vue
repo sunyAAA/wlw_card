@@ -171,7 +171,7 @@ export default {
   },
   computed: {
     cardNumber() {   
-      return  this.deviceMsg.cardNumber 
+      return  this.deviceMsg[this.activeName + 'Iccid']?this.deviceMsg.cardNumber :''
     },
     cmIccid() {
       return  this.deviceMsg[this.activeName + 'Iccid']
