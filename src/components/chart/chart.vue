@@ -6,8 +6,8 @@
     <ve-line :data="data" :settings="chartSettings"></ve-line>
     <el-row>
       <el-col :span='24/bottomList.length' v-for="(item,index) in bottomList" :key='index'>
-        <p class="count">{{item.value}} <span class="unit">{{item.unit}}</span> </p>
-        <p class="name">{{item.name}}</p>
+        <p class="count">{{ Math.abs(item.value) }} <span class="unit">{{item.unit}}</span> </p>
+        <p class="name" :class="{out:item.value <0}">{{item.value >= 0 ? item.name : '已超出流量'}}</p>
       </el-col>
     </el-row>
     </div>
@@ -29,7 +29,8 @@ export default {
   data() {
     this.chartSettings = {
       area: true,
-      xAxisType: "category"
+      xAxisType: "category",
+      boundaryGap:false
     };
     return {};
   },
@@ -90,6 +91,9 @@ export default {
   &:nth-child(4) .name {
     color: #999;
   }
+}
+p.name.out {
+  color #e4393c !important
 }
 </style>
 

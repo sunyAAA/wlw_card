@@ -6,11 +6,12 @@
                 placeholder="设备编号"
                 suffix-icon="el-icon-search"
                 type="number"
-                v-model.lazy="val"
+                v-model="val"
+                @blur='searchChange'
                 >
             </el-input>
         </transition>
-        <i class="el-icon-search" @click='toggle'></i>
+        <i class="el-icon-arrow-left" @click='toggle'></i>
     </div>
 </template>
 <script>
@@ -31,9 +32,7 @@ export default {
       toggle(){
           this.isShow = !this.isShow
       },
-  },
-  watch:{
-      val(){
+      searchChange(){
           this.$emit('search',this.val)
       }
   }

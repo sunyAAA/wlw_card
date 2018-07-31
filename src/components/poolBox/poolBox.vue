@@ -22,7 +22,7 @@
             <div class="table-box" v-if='showTable1'>
                 <search-box @search='search'></search-box>
                 <table-view @pageNoChange='pageChange' :data="tableData" :filter='filter' :total='totalCount'
-                    :loading='tableLoading'
+                    :loading='tableLoading' :poolId="pool.poolId" :pagesize="pageSize"
                 ></table-view>
             </div>
         </transition>

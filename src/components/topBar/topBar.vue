@@ -1,3 +1,4 @@
+
 <template>
     <div class="top-bar">
         <div>
@@ -20,7 +21,9 @@ export default {
         }
     },
     mounted(){
-        this.nickName = storage.get('u').name;
+        if(storage.get('u')){
+            this.nickName = storage.get('u').name;
+        }
     },
     methods:{
         out(){

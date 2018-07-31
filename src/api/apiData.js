@@ -44,3 +44,12 @@ export function getDeviceByPoolId(id,pageSize,pageNo){
 export function getDeviceInfo(){
     return Vue.http.post('api/device/getDeviceInfo',{})
 }
+
+export  function getDeviceById(id,pagesize,pageno){
+    return Vue.http.post('api/device/getList',{cardNo:id,pagesize,pageno})
+}
+
+export function getPoolDeviceById(poolId,cardNo,pagesize,pageno){
+    return Vue.http.get('api/pool/getDeviceByPoolId?poolId='+poolId+'&cardNo='+cardNo+'&pagesize='+pagesize+'&pageno='+pageno)
+}
+
