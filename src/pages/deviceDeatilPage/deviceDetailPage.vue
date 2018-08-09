@@ -117,7 +117,7 @@ export default {
         pickChange(val) {
             this.end = format(new Date(val[1]).getTime(), "Y-m-d H:i:s");
             this.begin = format(new Date(val[0]).getTime(), "Y-m-d H:i:s");
-            this.getDevicePool();
+            this.getDevicePoolData();
         },
         getDevicePoolData() {
             getDevicePool(this.deviceId, this.begin, this.end).then(res => {

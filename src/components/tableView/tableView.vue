@@ -157,7 +157,7 @@ export default {
                     return "号码不存在";
                     break;
                 default:
-                    return "异常";
+                    return "无数据";
             }
         }
     },

@@ -75,6 +75,7 @@ export function formartPoolData(arr, color) {
 }
 
 export function formatBottomList(arr) {
+    if(!arr){return[]}
     return [
         {
             name: '本月用量',
