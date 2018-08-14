@@ -18,9 +18,7 @@
 </template>
 
 <script>
-import Waves from "../../directives/waves/waves.js";
 export default {
-  directives:{Waves},
   data() {
     return {
       pickerOptions2: {
