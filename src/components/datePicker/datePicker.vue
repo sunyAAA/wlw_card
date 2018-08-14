@@ -13,12 +13,14 @@
             @change='pick'>
             </el-date-picker>
         </transition>
-        <i class="el-icon-date" @click='toggle'></i>
+        <i class="el-icon-date" @click='toggle' v-waves></i>
     </div>
 </template>
 
 <script>
+import Waves from "../../directives/waves/waves.js";
 export default {
+  directives:{Waves},
   data() {
     return {
       pickerOptions2: {

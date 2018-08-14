@@ -6,6 +6,8 @@ import VueResource from 'vue-resource'
 import config from './config'
 import storage from 'good-storage'
 import vueiInfinite from 'vue-infinite-scroll'
+import Waves from "./directives/waves/waves";
+
 Vue.use(vueiInfinite)
 Vue.use(VueResource)
 Vue.use(Col).use(Row).use(Table).use(DatePicker).use(Input).use(Pagination).use(Menu).use(MenuItem).use(Loading).use(TableColumn).use(Form).use(FormItem).use(Button).use(Tag).use(Tabs).use(TabPane)
@@ -35,7 +37,7 @@ Vue.http.options.emulateJSON = true;
 // }
 
 require('vue2-animate/dist/vue2-animate.min.css')
-
+Vue.directive('waves',Waves)
 new Vue({
 	el: '#app',
 	render: h => h(App),

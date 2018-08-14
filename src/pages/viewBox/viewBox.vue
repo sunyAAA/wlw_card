@@ -26,10 +26,8 @@
 
 <script>
 import TopBar from "../../components/topBar/topBar";
-import Waves from "../../directives/waves/waves.js";
 import storage from "good-storage";
 export default {
-    directives: { Waves },
     data() {
         return {
             routeList: ["/total", "/pool", "/device"],

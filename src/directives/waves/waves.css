@@ -1,7 +1,7 @@
 .waves-ripple {
     position: absolute;
     border-radius: 100%;
-    background-color: rgba(0, 0, 0, 0.15);
+    background-color: rgba(33, 33, 33, 0.15);
     background-clip: padding-box;
     pointer-events: none;
     -webkit-user-select: none;

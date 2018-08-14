@@ -2,8 +2,8 @@
 	<div class="device-page">
 		<p class="title">设备</p>
 		<p class="page-desc">
-			<i class="el-icon-menu"></i>{{deviceTitle}}</p>
-		<search-box @search='search'></search-box>
+			<i  class="el-icon-menu"></i>{{deviceTitle}}</p>
+		<search-box  @search='search'></search-box>
 		<table-view :data='deviceList' :filter='filter' :total='deviceListTotal' :loading="deviceListLoading" :pagesize='pageSize' @pageNoChange='pageChange'></table-view>
 	</div>
 </template>

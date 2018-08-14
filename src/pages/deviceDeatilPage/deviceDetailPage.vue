@@ -8,9 +8,9 @@
                 <panel title="基本信息" icon="menu">
                     <div slot="tab">
                         <el-tabs v-model="activeName" aria-readonly style="height: 40px;float:right">
-                            <el-tab-pane name='cm' label="移动"></el-tab-pane>
-                            <el-tab-pane name='cu' label="联通"></el-tab-pane>
-                            <el-tab-pane name='ct' label="电信"></el-tab-pane>
+                            <el-tab-pane  name='cm' label="移动"></el-tab-pane>
+                            <el-tab-pane  name='cu' label="联通"></el-tab-pane>
+                            <el-tab-pane  name='ct' label="电信"></el-tab-pane>
                         </el-tabs>
                         <div class="card-box">
                             <card name="卡号" :val="cardNumber || ''"></card>

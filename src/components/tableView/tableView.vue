@@ -1,7 +1,7 @@
 <template>
     <div class="table-view">
         <el-table :data="curData" v-loading='loading' element-loading-text="拼命加载中" element-loading-spinner="el-icon-loading" element-loading-background="rgba(0, 0, 0, .6)" style="width: 100%" :default-sort="{prop: 'deviceId', order: 'descending'}" @row-click='go'>
-            <el-table-column prop="deviceId" label="设备编号" sortable width="180">
+            <el-table-column prop="deviceId" label="设备编号" sortable width="180" >
             </el-table-column>
             <el-table-column prop="cardNumber" label="号码" sortable width="180">
             </el-table-column>
@@ -31,6 +31,7 @@
 
 <script>
 import { getDeviceById, getPoolDeviceById } from "../../api/apiData.js";
+
 import {format} from '../../api/dataUtil.js' 
 export default {
     props: {
