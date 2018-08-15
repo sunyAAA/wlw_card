@@ -98,7 +98,13 @@ export default {
             this.deviceMsg = res.body.data;
             getCompanyById(res.body.data.companyId).then(res => {
                 var d = res.body.data;
-                this.name = res.body.data.name;
+                var u = storage.get('u');
+                console.log(u)
+                if(u.userId == 279){
+                    this.name = u.name
+                }else{
+                    this.name = res.body.data.name;
+                }
             });
         });
         this.getDevicePoolData();
