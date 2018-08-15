@@ -99,7 +99,6 @@ export default {
             getCompanyById(res.body.data.companyId).then(res => {
                 var d = res.body.data;
                 var u = storage.get('u');
-                console.log(u)
                 if(u.userId == 279){
                     this.name = u.name
                 }else{
